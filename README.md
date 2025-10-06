@@ -12,7 +12,7 @@ Atualizar informações de alunos;
 
 Excluir registros.
 
-# <div align="center">O código contém comentários explicativos para facilitar o aprendizado e entendimento do funcionamento do aplicativo.</div>
+# O código contém comentários explicativos para facilitar o aprendizado e entendimento do funcionamento do aplicativo.
 
 ## Tecnologias utilizadas
 
@@ -22,7 +22,7 @@ Front-end: HTML, CSS e Bootstrap
 
 Banco de dados: MySQL
 
-# <div align="center">Como executar</div>
+# Como executar
 
 ## Instale as dependências:
 
@@ -38,7 +38,7 @@ python app.py
 
 https://localhost:5000/
 
-# <div align="center">Pré-visualização</div>
+# Pré-visualização
 
 (adicione aqui uma imagem ou GIF da interface do aplicativo, se quiser)
 

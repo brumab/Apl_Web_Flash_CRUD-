@@ -40,8 +40,4 @@ https://localhost:5000/
 
 # Pré-visualização
 
-(adicione aqui uma imagem ou GIF da interface do aplicativo, se quiser)
-
-Se você quiser, posso criar uma versão ainda mais curta e direta, perfeita para GitHub, que fica bem clean e chamativa para qualquer pessoa que entrar no seu repositório.
-
-Quer que eu faça?
+![screenshot](Python_Crud.JPG)

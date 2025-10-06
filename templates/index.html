@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    {{ fontawesome_html() }}
+    <title>CRUD de Alunos - Flask</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='teacher.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% block body %}
+    <div class="container-fluid heading full-screen">
+        <h1>Aplicativo Web Flask CRUD - Gerenciamento de Alunos</h1>
+    </div>
+
+    <div class="container mt-4">
+        <h2>Lista de Alunos 
+            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#modal-inserir">Adicionar Aluno</button>
+        </h2>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in students %}
+                <tr>
+                    <td>{{ row.0 }}</td>
+                    <td>{{ row.1 }}</td>
+                    <td>{{ row.2 }}</td>
+                    <td>{{ row.3 }}</td>
+                    <td>
+                        <a href="/atualizar/{{ row.0 }}" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-editar{{ row.0 }}"><i class="fas fa-edit"></i></a>
+                        <a href="/excluir/{{ row.0 }}" class="btn btn-danger btn-sm" onclick="return confirm('Deseja realmente excluir este aluno?')"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+
+                <!-- Modal Editar -->
+                <div id="modal-editar{{ row.0 }}" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Atualizar Aluno</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('atualizar') }}" method="POST">
+                                    <input type="hidden" name="id" value="{{ row.0 }}">
+                                    <div class="form-group">
+                                        <label>Nome:</label>
+                                        <input type="text" name="name" class="form-control" value="{{ row.1 }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>E-mail:</label>
+                                        <input type="email" name="email" class="form-control" value="{{ row.2 }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Telefone:</label>
+                                        <input type="tel" name="phone" class="form-control" value="{{ row.3 }}" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Inserir -->
+    <div id="modal-inserir" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Adicionar Novo Aluno</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('inserir') }}" method="POST">
+                        <div class="form-group">
+                            <label>Nome:</label>
+                            <input type="text" name="name" class="form-control" placeholder="Digite o nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail:</label>
+                            <input type="email" name="email" class="form-control" placeholder="Digite o e-mail" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone:</label>
+                            <input type="tel" name="phone" class="form-control" placeholder="Digite o telefone" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+<div class="footer text-center mt-4 mb-3">
+    <p>Desenvolvido com ❤ por Bruno Molina <br> 
+    © 2025 | Todos os direitos reservados.</p>
+</div>
+
+<script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

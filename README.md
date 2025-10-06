@@ -41,3 +41,4 @@ https://localhost:5000/
 # Pré-visualização
 
 ![screenshot](Python_Crud.JPG)
+![screenshot](Python_Crud1.JPG)

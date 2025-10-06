@@ -1,4 +1,4 @@
-#  Aplicativo CRUD em Python Flask
+# <div align="center">Aplicativo CRUD em Python Flask</div>
 
 ## Exemplo de um aplicativo web CRUD usando Python, Flask e MySQL. CRUD significa Criar, Ler, Atualizar e Excluir registros.
 
@@ -12,7 +12,7 @@ Atualizar informações de alunos;
 
 Excluir registros.
 
-# O código contém comentários explicativos para facilitar o aprendizado e entendimento do funcionamento do aplicativo.
+# <div align="center">O código contém comentários explicativos para facilitar o aprendizado e entendimento do funcionamento do aplicativo.</div>
 
 ## Tecnologias utilizadas
 
@@ -22,7 +22,7 @@ Front-end: HTML, CSS e Bootstrap
 
 Banco de dados: MySQL
 
-# Como executar
+# <div align="center">Como executar</div>
 
 ## Instale as dependências:
 
@@ -38,7 +38,7 @@ python app.py
 
 https://localhost:5000/
 
-# Pré-visualização
+# <div align="center">Pré-visualização</div>
 
 (adicione aqui uma imagem ou GIF da interface do aplicativo, se quiser)
 

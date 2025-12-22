@@ -1,33 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,600;1,800&family=Jost:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,600;1,700&display=swap');
 
-/* ======= Configuração do corpo para ocupar toda a altura ======= */
+/* ======= Reset básico ======= */
+* {
+    box-sizing: border-box;
+}
+
+/* ======= Altura total da página ======= */
 html, body {
     height: 100%;
     margin: 0;
 }
 
-
-/* ======= Estilos gerais ======= */
+/* ======= Corpo ======= */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Jost', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f7fa;
     color: #333;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ======= Cabeçalho ======= */
 .heading {
-    background: linear-gradient(900deg, #005792, #0078c4);
+    background: linear-gradient(90deg, #005792, #0078c4);
     color: #fff;
-    padding: 20px ;
+    padding: 20px;
     text-align: center;
-    box-shadow: 0 3px 89px rgba(0,0,0,9.2);
+    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
 }
 
 .heading h1 {
-    font-size: 5.2rem;
-    font-weight: 900;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0;
 }
 
 /* ======= Container principal ======= */
@@ -37,14 +42,10 @@ body {
     padding: 25px;
     margin-top: 30px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    flex: 1;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-}
-
-/* ======= Título e botão principal ======= */
+/* ======= Título e botão ======= */
 h2 {
     font-weight: 600;
     color: #005792;
@@ -53,6 +54,7 @@ h2 {
     align-items: center;
 }
 
+/* ======= Botão principal ======= */
 .btn-primary {
     background-color: #0078c4;
     border: none;
@@ -70,17 +72,18 @@ h2 {
 /* ======= Tabela ======= */
 .table {
     width: 100%;
+    margin-top: 20px;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 20px;
 }
 
 .table thead {
-    background: #0078c4;
+    background-color: #0078c4;
     color: #fff;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     text-align: center;
     padding: 12px;
     border-bottom: 1px solid #ddd;
@@ -127,7 +130,7 @@ h2 {
 
 .modal-header {
     background-color: #0078c4;
-    color: white;
+    color: #fff;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -136,38 +139,25 @@ h2 {
     font-weight: 600;
 }
 
-.modal-body label {
-    font-weight: 500;
-}
-
-.modal-footer button {
-    border-radius: 8px;
-}
-
-/* ======= Rodapé ======= */
-
-.footer {
-    background-color: #005792;
-    color: #fff;
-    padding: 10px 0; /* altura reduzida */
-    font-size: 0.3 .8rem;
-    text-align: center;
-}
-
-.footer p {
-    margin: 90;
-}
-/* Conteúdo principal flexível para empurrar o footer para baixo */
-.container {
-    flex: 1;
-}
-
-/* ======= Mensagens de sucesso ======= */
+/* ======= Alertas ======= */
 .alert-success {
     border-radius: 8px;
     background-color: #d1e7dd;
     color: #0f5132;
     border: 1px solid #badbcc;
+}
+
+/* ======= Rodapé ======= */
+.footer {
+    background-color: #005792;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.footer p {
+    margin: 0;
 }
 
 /* ======= Responsividade ======= */
@@ -180,7 +170,8 @@ h2 {
         padding: 15px;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         font-size: 0.9rem;
     }
 

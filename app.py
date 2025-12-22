@@ -3,9 +3,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
 from flask_fontawesome import FontAwesome
 
-
 app = Flask(__name__)
-fa = FontAwesome(app)
+FontAwesome(app)
 
 app.secret_key = 'mensagem_flash'
 
@@ -17,16 +16,14 @@ app.secret_key = 'mensagem_flash'
 #app.config['MYSQL_DB'] = 'python_crud'
 #app.config['MYSQL_PORT'] = 3306
 
-import os
-
+app.secret_key = os.environ.get("SECRET_KEY", "fallback_key")
+# Configuração MySQL (Render / Aiven)
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
-
-app.secret_key = os.environ.get('SECRET_KEY')
-
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 

@@ -5,17 +5,28 @@
     {{ fontawesome_html() }}
     <title>CRUD de Alunos - Flask</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS customizado -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
+
 <div class="container mt-4">
 
     <h2>
         Lista de Alunos
-        <button class="btn btn-primary float-right" data-toggle="modal" data-target="#modalInserir">
+        <button class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#modalInserir">
             Adicionar
         </button>
     </h2>
@@ -39,57 +50,70 @@
             </tr>
         </thead>
         <tbody>
+
         {% for row in students %}
-            <tr>
-                <td>{{ row.id }}</td>
-                <td>{{ row.name }}</td>
-                <td>{{ row.email }}</td>
-                <td>{{ row.phone }}</td>
-                <td>
+        <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.phone }}</td>
+            <td>
 
-                    <!-- EDITAR -->
-                    <button class="btn btn-warning btn-sm"
-                            data-toggle="modal"
-                            data-target="#editar{{ row.id }}">
-                        <i class="fas fa-edit"></i>
+                <!-- EDITAR -->
+                <button class="btn btn-warning btn-sm"
+                        data-toggle="modal"
+                        data-target="#editar{{ row.id }}">
+                    <i class="fas fa-edit"></i>
+                </button>
+
+                <!-- EXCLUIR -->
+                <form action="{{ url_for('excluir', id_dado=row.id) }}"
+                      method="POST"
+                      style="display:inline;">
+                    <button class="btn btn-danger btn-sm"
+                            onclick="return confirm('Excluir aluno?')">
+                        <i class="fas fa-trash"></i>
                     </button>
+                </form>
+            </td>
+        </tr>
 
-                    <!-- EXCLUIR -->
-                    <form action="{{ url_for('excluir', id_dado=row.id) }}"
-                          method="POST"
-                          style="display:inline;">
-                        <button class="btn btn-danger btn-sm"
-                                onclick="return confirm('Excluir aluno?')">
-                            <i class="fas fa-trash"></i>
-                        </button>
+        <!-- MODAL EDITAR -->
+        <div class="modal fade" id="editar{{ row.id }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ url_for('atualizar') }}" method="POST">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar Aluno</h5>
+                            <button type="button"
+                                    class="close"
+                                    data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <div class="modal-body">
+                            <input type="hidden" name="id" value="{{ row.id }}">
+                            <input type="text" name="name"
+                                   class="form-control mb-2"
+                                   value="{{ row.name }}" required>
+
+                            <input type="email" name="email"
+                                   class="form-control mb-2"
+                                   value="{{ row.email }}" required>
+
+                            <input type="tel" name="phone"
+                                   class="form-control"
+                                   value="{{ row.phone }}" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-success">Salvar</button>
+                        </div>
+
                     </form>
-                </td>
-            </tr>
-
-            <!-- MODAL EDITAR -->
-            <div class="modal fade" id="editar{{ row.id }}">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form action="{{ url_for('atualizar') }}" method="POST">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Editar Aluno</h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <div class="modal-body">
-                                <input type="hidden" name="id" value="{{ row.id }}">
-                                <input type="text" name="name" class="form-control mb-2" value="{{ row.name }}" required>
-                                <input type="email" name="email" class="form-control mb-2" value="{{ row.email }}" required>
-                                <input type="tel" name="phone" class="form-control" value="{{ row.phone }}" required>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button class="btn btn-success">Salvar</button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
+        </div>
 
         {% endfor %}
         </tbody>
@@ -101,26 +125,40 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{ url_for('inserir') }}" method="POST">
+
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Aluno</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal">&times;</button>
                 </div>
 
                 <div class="modal-body">
-                    <input type="text" name="name" class="form-control mb-2" placeholder="Nome" required>
-                    <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-                    <input type="tel" name="phone" class="form-control" placeholder="Telefone" required>
+                    <input type="text" name="name"
+                           class="form-control mb-2"
+                           placeholder="Nome" required>
+
+                    <input type="email" name="email"
+                           class="form-control mb-2"
+                           placeholder="E-mail" required>
+
+                    <input type="tel" name="phone"
+                           class="form-control"
+                           placeholder="Telefone" required>
                 </div>
 
                 <div class="modal-footer">
                     <button class="btn btn-primary">Salvar</button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
 
+<!-- JS -->
 <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></cript>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
 </body>
 </html>

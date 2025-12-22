@@ -12,8 +12,7 @@ FontAwesome(app)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback_key")
 
 # =========================
-# 🗄️ Configuração MySQL
-# (Render + Aiven)
+# 🗄️ MySQL Config (Aiven)
 # =========================
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
@@ -25,7 +24,8 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # =========================
-# 🔒 Criação segura da tabela
+# 🔒 Cria tabela se não existir
+# (Flask 3 compatible)
 # =========================
 def create_table():
     cur = mysql.connection.cursor()
@@ -40,10 +40,8 @@ def create_table():
     mysql.connection.commit()
     cur.close()
 
-# Garante que a tabela só será criada
-# quando a app já estiver pronta
-@app.before_first_request
-def init_db():
+# Executa na inicialização da app
+with app.app_context():
     create_table()
 
 # =========================
@@ -104,8 +102,7 @@ def excluir(id_dado):
     return redirect(url_for('index'))
 
 # =========================
-# 🚀 Execução local
-# (Render usa Gunicorn)
+# 🚀 Local only
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)

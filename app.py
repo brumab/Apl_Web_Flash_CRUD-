@@ -6,18 +6,15 @@ from flask_fontawesome import FontAwesome
 app = Flask(__name__)
 FontAwesome(app)
 
-app.secret_key = 'mensagem_flash'
-
-# Configurações do banco de dados MySQL
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = 'bruno@974567'
-#app.config['MYSQL_NAME'] = 'python_crud'
-#app.config['MYSQL_DB'] = 'python_crud'
-#app.config['MYSQL_PORT'] = 3306
-
+# =========================
+# 🔐 Secret Key
+# =========================
 app.secret_key = os.environ.get("SECRET_KEY", "fallback_key")
-# Configuração MySQL (Render / Aiven)
+
+# =========================
+# 🗄️ Configuração MySQL
+# (Render + Aiven)
+# =========================
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
@@ -27,59 +24,88 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
-# Página inicial
+# =========================
+# 🔒 Criação segura da tabela
+# =========================
+def create_table():
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS students (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            phone VARCHAR(20) NOT NULL
+        )
+    """)
+    mysql.connection.commit()
+    cur.close()
+
+# Garante que a tabela só será criada
+# quando a app já estiver pronta
+@app.before_first_request
+def init_db():
+    create_table()
+
+# =========================
+# 📌 ROTAS
+# =========================
 @app.route('/')
 def index():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM students")
+    cur.execute("SELECT * FROM students ORDER BY id DESC")
     data = cur.fetchall()
     cur.close()
     return render_template('index.html', students=data)
 
-# Inserir novo registro
 @app.route('/inserir', methods=['POST'])
 def inserir():
-    if request.method == "POST":
-        flash("Dados inseridos com sucesso!")
+    nome = request.form['name']
+    email = request.form['email']
+    telefone = request.form['phone']
 
-        nome = request.form['name']
-        email = request.form['email']
-        telefone = request.form['phone']
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "INSERT INTO students (name, email, phone) VALUES (%s, %s, %s)",
+        (nome, email, telefone)
+    )
+    mysql.connection.commit()
+    cur.close()
 
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO students(name, email, phone) VALUES(%s, %s, %s)", (nome, email, telefone))
-        mysql.connection.commit()
-        return redirect(url_for('index'))
+    flash("Dados inseridos com sucesso!")
+    return redirect(url_for('index'))
 
-# Atualizar registro existente
 @app.route('/atualizar', methods=['POST'])
 def atualizar():
-    if request.method == "POST":
-        flash("Dados atualizados com sucesso!")
+    id_dado = request.form['id']
+    nome = request.form['name']
+    email = request.form['email']
+    telefone = request.form['phone']
 
-        id_dado = request.form['id']
-        nome = request.form['name']
-        email = request.form['email']
-        telefone = request.form['phone']
-
-        cur = mysql.connection.cursor()
-        cur.execute("""
+    cur = mysql.connection.cursor()
+    cur.execute("""
         UPDATE students
         SET name=%s, email=%s, phone=%s
         WHERE id=%s
-        """, (nome, email, telefone, id_dado))
-        mysql.connection.commit()
-        return redirect(url_for('index'))
+    """, (nome, email, telefone, id_dado))
+    mysql.connection.commit()
+    cur.close()
 
-# Excluir registro
-@app.route('/excluir/<string:id_dado>', methods=['POST','GET'])
+    flash("Dados atualizados com sucesso!")
+    return redirect(url_for('index'))
+
+@app.route('/excluir/<int:id_dado>')
 def excluir(id_dado):
-    flash("Dados excluídos com sucesso!")
-
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM students WHERE id=%s", (id_dado,))
     mysql.connection.commit()
+    cur.close()
+
+    flash("Dados excluídos com sucesso!")
     return redirect(url_for('index'))
 
+# =========================
+# 🚀 Execução local
+# (Render usa Gunicorn)
+# =========================
 if __name__ == "__main__":
     app.run(debug=True)

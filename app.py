@@ -8,12 +8,19 @@ fa = FontAwesome(app)
 app.secret_key = 'mensagem_flash'
 
 # Configurações do banco de dados MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'bruno@974567'
-app.config['MYSQL_NAME'] = 'python_crud'
-app.config['MYSQL_DB'] = 'python_crud'
-app.config['MYSQL_PORT'] = 3306
+#app.config['MYSQL_HOST'] = 'localhost'
+#app.config['MYSQL_USER'] = 'root'
+#app.config['MYSQL_PASSWORD'] = 'bruno@974567'
+#app.config['MYSQL_NAME'] = 'python_crud'
+#app.config['MYSQL_DB'] = 'python_crud'
+#app.config['MYSQL_PORT'] = 3306
+
+app.config['MYSQL_HOST'] 
+app.config['MYSQL_USER'] 
+app.config['MYSQL_PASSWORD']
+app.config['MYSQL_DB'] 
+app.config['MYSQL_PORT'] 
+app.config['MYSQL_CURSORCLASS'] 
 
 mysql = MySQL(app)
 

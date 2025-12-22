@@ -12,7 +12,7 @@ FontAwesome(app)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback_key")
 
 # =========================
-# 🗄️ MySQL Config (Aiven)
+# 🗄️ MySQL Config (Render / Aiven)
 # =========================
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
@@ -25,7 +25,6 @@ mysql = MySQL(app)
 
 # =========================
 # 🔒 Cria tabela se não existir
-# (Flask 3 compatible)
 # =========================
 def create_table():
     cur = mysql.connection.cursor()
@@ -40,7 +39,6 @@ def create_table():
     mysql.connection.commit()
     cur.close()
 
-# Executa na inicialização da app
 with app.app_context():
     create_table()
 
@@ -51,54 +49,51 @@ with app.app_context():
 def index():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM students ORDER BY id DESC")
-    data = cur.fetchall()
+    students = cur.fetchall()
     cur.close()
-    return render_template('index.html', students=data)
+    return render_template('index.html', students=students)
 
 @app.route('/inserir', methods=['POST'])
 def inserir():
-    nome = request.form['name']
-    email = request.form['email']
-    telefone = request.form['phone']
-
     cur = mysql.connection.cursor()
     cur.execute(
         "INSERT INTO students (name, email, phone) VALUES (%s, %s, %s)",
-        (nome, email, telefone)
+        (
+            request.form['name'],
+            request.form['email'],
+            request.form['phone']
+        )
     )
     mysql.connection.commit()
     cur.close()
-
-    flash("Dados inseridos com sucesso!")
+    flash("Aluno inserido com sucesso!")
     return redirect(url_for('index'))
 
 @app.route('/atualizar', methods=['POST'])
 def atualizar():
-    id_dado = request.form['id']
-    nome = request.form['name']
-    email = request.form['email']
-    telefone = request.form['phone']
-
     cur = mysql.connection.cursor()
     cur.execute("""
         UPDATE students
         SET name=%s, email=%s, phone=%s
         WHERE id=%s
-    """, (nome, email, telefone, id_dado))
+    """, (
+        request.form['name'],
+        request.form['email'],
+        request.form['phone'],
+        request.form['id']
+    ))
     mysql.connection.commit()
     cur.close()
-
-    flash("Dados atualizados com sucesso!")
+    flash("Aluno atualizado com sucesso!")
     return redirect(url_for('index'))
 
-@app.route('/excluir/<string:id_dado>')
+@app.route('/excluir/<int:id_dado>', methods=['POST'])
 def excluir(id_dado):
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM students WHERE id=%s", (id_dado,))
     mysql.connection.commit()
     cur.close()
-
-    flash("Dados excluídos com sucesso!")
+    flash("Aluno excluído com sucesso!")
     return redirect(url_for('index'))
 
 # =========================

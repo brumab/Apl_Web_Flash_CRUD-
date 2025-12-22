@@ -1,23 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,600;1,800&family=Jost:wght@100;200;300;400;500;600;700;800;900&family=Poppins:ital,wght@0,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* ======= Reset básico ======= */
-* {
-    box-sizing: border-box;
-}
-
-/* ======= Altura total da página ======= */
+/* ======= Configuração do corpo ======= */
 html, body {
     height: 100%;
     margin: 0;
-}
-
-/* ======= Corpo ======= */
-body {
-    font-family: 'Jost', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
     color: #333;
-    display: flex;
-    flex-direction: column;
 }
 
 /* ======= Cabeçalho ======= */
@@ -26,13 +15,12 @@ body {
     color: #fff;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
 .heading h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
 }
 
 /* ======= Container principal ======= */
@@ -45,16 +33,22 @@ body {
     flex: 1;
 }
 
-/* ======= Título e botão ======= */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ======= Título e botão principal ======= */
 h2 {
     font-weight: 600;
     color: #005792;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
-/* ======= Botão principal ======= */
 .btn-primary {
     background-color: #0078c4;
     border: none;
@@ -72,18 +66,17 @@ h2 {
 /* ======= Tabela ======= */
 .table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: separate;
     border-spacing: 0;
+    margin-top: 20px;
 }
 
 .table thead {
-    background-color: #0078c4;
+    background: #0078c4;
     color: #fff;
 }
 
-.table th,
-.table td {
+.table th, .table td {
     text-align: center;
     padding: 12px;
     border-bottom: 1px solid #ddd;
@@ -129,22 +122,8 @@ h2 {
 }
 
 .modal-header {
-    background-color: #0078c4;
-    color: #fff;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-}
-
-.modal-title {
-    font-weight: 600;
-}
-
-/* ======= Alertas ======= */
-.alert-success {
-    border-radius: 8px;
-    background-color: #d1e7dd;
-    color: #0f5132;
-    border: 1px solid #badbcc;
 }
 
 /* ======= Rodapé ======= */
@@ -152,26 +131,22 @@ h2 {
     background-color: #005792;
     color: #fff;
     padding: 10px 0;
+    font-size: 0.9rem;
     text-align: center;
-    font-size: 0.85rem;
-}
-
-.footer p {
-    margin: 0;
+    margin-top: auto;
 }
 
 /* ======= Responsividade ======= */
 @media (max-width: 768px) {
     .heading h1 {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
     }
 
     .container {
         padding: 15px;
     }
 
-    .table th,
-    .table td {
+    .table th, .table td {
         font-size: 0.9rem;
     }
 

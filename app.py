@@ -91,7 +91,7 @@ def atualizar():
     flash("Dados atualizados com sucesso!")
     return redirect(url_for('index'))
 
-@app.route('/excluir/<int:id_dado>')
+@app.route('/excluir/<string:id_dado>')
 def excluir(id_dado):
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM students WHERE id=%s", (id_dado,))

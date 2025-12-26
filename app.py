@@ -1,25 +1,19 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
-# =========================
-# 🔐 Secret Key
-# =========================
-app.secret_key = os.environ.get("SECRET_KEY", "fallback_key")
-
-# =========================
-# 🗄️ MySQL Config (Render)
-# =========================
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['MYSQL_SSL'] = {'ssl-mode': 'REQUIRED'}
 
 mysql = MySQL(app)
+
 
 # =========================
 # 🔒 Inicialização segura do banco (Flask 3.x)
@@ -53,6 +47,14 @@ def init_db():
 # =========================
 # 📌 ROTAS
 # =========================
+@app.route("/test-db")
+def test_db():
+    try:
+        conn = mysql.connection
+        return "✅ Conectado ao MySQL com sucesso"
+    except Exception as e:
+        return f"❌ Erro MySQL: {e}"
+
 @app.route('/')
 def index():
     cur = mysql.connection.cursor()

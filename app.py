@@ -22,22 +22,28 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # =========================
-# 🔒 Cria tabela se não existir
+# 🔒 Cria tabela (seguro para produção)
 # =========================
 def create_table():
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS students (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
-            email VARCHAR(100) NOT NULL,
-            phone VARCHAR(20) NOT NULL
-        )
-    """)
-    mysql.connection.commit()
-    cur.close()
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS students (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) NOT NULL,
+                phone VARCHAR(20) NOT NULL
+            )
+        """)
+        mysql.connection.commit()
+        cur.close()
+        print("Tabela 'students' verificada/criada com sucesso.")
+    except Exception as e:
+        print("Erro ao criar tabela:", e)
 
-with app.app_context():
+
+@app.before_first_request
+def init_db():
     create_table()
 
 # =========================
@@ -50,6 +56,7 @@ def index():
     students = cur.fetchall()
     cur.close()
     return render_template('index.html', students=students)
+
 
 @app.route('/inserir', methods=['POST'])
 def inserir():
@@ -67,6 +74,7 @@ def inserir():
 
     flash("Aluno cadastrado com sucesso!")
     return redirect(url_for('index'))
+
 
 @app.route('/atualizar', methods=['POST'])
 def atualizar():
@@ -86,6 +94,7 @@ def atualizar():
 
     flash("Aluno atualizado com sucesso!")
     return redirect(url_for('index'))
+
 
 @app.route('/excluir/<int:id_dado>', methods=['POST'])
 def excluir(id_dado):

@@ -22,7 +22,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # =========================
-# 🔒 Cria tabela (seguro para produção)
+# 🔒 Criação segura da tabela
 # =========================
 def create_table():
     try:
@@ -37,7 +37,7 @@ def create_table():
         """)
         mysql.connection.commit()
         cur.close()
-        print("Tabela 'students' verificada/criada com sucesso.")
+        print("Tabela students OK")
     except Exception as e:
         print("Erro ao criar tabela:", e)
 
@@ -60,38 +60,32 @@ def index():
 
 @app.route('/inserir', methods=['POST'])
 def inserir():
-    nome = request.form['name']
-    email = request.form['email']
-    telefone = request.form['phone']
-
     cur = mysql.connection.cursor()
     cur.execute(
         "INSERT INTO students (name, email, phone) VALUES (%s, %s, %s)",
-        (nome, email, telefone)
+        (request.form['name'], request.form['email'], request.form['phone'])
     )
     mysql.connection.commit()
     cur.close()
-
     flash("Aluno cadastrado com sucesso!")
     return redirect(url_for('index'))
 
 
 @app.route('/atualizar', methods=['POST'])
 def atualizar():
-    id_dado = request.form['id']
-    nome = request.form['name']
-    email = request.form['email']
-    telefone = request.form['phone']
-
     cur = mysql.connection.cursor()
     cur.execute("""
         UPDATE students
         SET name=%s, email=%s, phone=%s
         WHERE id=%s
-    """, (nome, email, telefone, id_dado))
+    """, (
+        request.form['name'],
+        request.form['email'],
+        request.form['phone'],
+        request.form['id']
+    ))
     mysql.connection.commit()
     cur.close()
-
     flash("Aluno atualizado com sucesso!")
     return redirect(url_for('index'))
 
@@ -102,9 +96,9 @@ def excluir(id_dado):
     cur.execute("DELETE FROM students WHERE id=%s", (id_dado,))
     mysql.connection.commit()
     cur.close()
-
     flash("Aluno excluído com sucesso!")
     return redirect(url_for('index'))
+
 
 # =========================
 # 🚀 Local only

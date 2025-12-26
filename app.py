@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback_key")
 
 # =========================
-# 🗄️ MySQL Config (Aiven / Render)
+# 🗄️ MySQL Config (Render)
 # =========================
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
@@ -22,29 +22,33 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # =========================
-# 🔒 Criação segura da tabela
+# 🔒 Inicialização segura do banco (Flask 3.x)
 # =========================
+db_initialized = False
+
 def create_table():
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS students (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(100) NOT NULL,
-                email VARCHAR(100) NOT NULL,
-                phone VARCHAR(20) NOT NULL
-            )
-        """)
-        mysql.connection.commit()
-        cur.close()
-        print("Tabela students OK")
-    except Exception as e:
-        print("Erro ao criar tabela:", e)
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS students (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            phone VARCHAR(20) NOT NULL
+        )
+    """)
+    mysql.connection.commit()
+    cur.close()
+    print("Tabela students pronta")
 
-
-@app.before_first_request
+@app.before_request
 def init_db():
-    create_table()
+    global db_initialized
+    if not db_initialized:
+        try:
+            create_table()
+            db_initialized = True
+        except Exception as e:
+            print("Erro ao inicializar banco:", e)
 
 # =========================
 # 📌 ROTAS
@@ -57,7 +61,6 @@ def index():
     cur.close()
     return render_template('index.html', students=students)
 
-
 @app.route('/inserir', methods=['POST'])
 def inserir():
     cur = mysql.connection.cursor()
@@ -69,7 +72,6 @@ def inserir():
     cur.close()
     flash("Aluno cadastrado com sucesso!")
     return redirect(url_for('index'))
-
 
 @app.route('/atualizar', methods=['POST'])
 def atualizar():
@@ -89,7 +91,6 @@ def atualizar():
     flash("Aluno atualizado com sucesso!")
     return redirect(url_for('index'))
 
-
 @app.route('/excluir/<int:id_dado>', methods=['POST'])
 def excluir(id_dado):
     cur = mysql.connection.cursor()
@@ -98,7 +99,6 @@ def excluir(id_dado):
     cur.close()
     flash("Aluno excluído com sucesso!")
     return redirect(url_for('index'))
-
 
 # =========================
 # 🚀 Local only

@@ -1,6 +1,8 @@
 import os
-from flask import Flask
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
+from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 
@@ -10,7 +12,11 @@ app.config['MYSQL_PASSWORD'] = os.environ.get("MYSQL_PASSWORD")
 app.config['MYSQL_DB'] = os.environ.get("MYSQL_DB")
 app.config['MYSQL_PORT'] = int(os.environ.get("MYSQL_PORT", 3306))
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
-app.config['MYSQL_SSL'] = {"ssl": {}}
+
+# SSL só se a variável existir (Render / Aiven)
+if os.environ.get("MYSQL_SSL") == "true":
+    app.config['MYSQL_SSL'] = {"ssl": {}}
+
 
 
 mysql = MySQL(app)

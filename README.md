@@ -20,7 +20,7 @@ Python 3
 
 Flask
 
-PyMySQL
+MySQL
 
 MySQL (Aiven Cloud)
 

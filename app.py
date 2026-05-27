@@ -62,8 +62,9 @@ def test_db():
         cur.close()
         conn.close()
         return "✅ Conectado ao MySQL Aiven com sucesso"
-    except Exception as e:
-        return f"❌ Erro MySQL: {e}"
+    except Exception:
+        app.logger.exception("Erro ao testar conexão com MySQL")
+        return "❌ Erro interno ao conectar ao banco de dados.", 500
 
 @app.route("/")
 def index():
